@@ -28,6 +28,7 @@ typedef NSUInteger SVPullToRefreshPosition;
 
 @property (nonatomic, strong, readonly) SVPullToRefreshView *pullToRefreshView;
 @property (nonatomic, assign) BOOL showsPullToRefresh;
+@property (nonatomic, assign) float pullToRefreshViewHeight;
 
 @end
 

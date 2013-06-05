@@ -60,18 +60,24 @@ static CGFloat const SVPullToRefreshViewHeight = 60;
 #import <objc/runtime.h>
 
 static char UIScrollViewPullToRefreshView;
+static char UIScrollViewPullToRefreshViewHeight;
 
 @implementation UIScrollView (SVPullToRefresh)
 
-@dynamic pullToRefreshView, showsPullToRefresh;
+@dynamic pullToRefreshView, showsPullToRefresh, pullToRefreshViewHeight;
 
 - (void)addPullToRefreshWithActionHandler:(void (^)(void))actionHandler position:(SVPullToRefreshPosition)position {
     
+    if (fequalzero(self.pullToRefreshViewHeight))
+    {
+        self.pullToRefreshViewHeight = SVPullToRefreshViewHeight;
+    }
+
     if(!self.pullToRefreshView) {
         CGFloat yOrigin;
         switch (position) {
             case SVPullToRefreshPositionTop:
-                yOrigin = -SVPullToRefreshViewHeight;
+                yOrigin = -self.pullToRefreshViewHeight;
                 break;
             case SVPullToRefreshPositionBottom:
                 yOrigin = self.contentSize.height;
@@ -79,7 +85,7 @@ static char UIScrollViewPullToRefreshView;
             default:
                 return;
         }
-        SVPullToRefreshView *view = [[SVPullToRefreshView alloc] initWithFrame:CGRectMake(0, yOrigin, self.bounds.size.width, SVPullToRefreshViewHeight)];
+        SVPullToRefreshView *view = [[SVPullToRefreshView alloc] initWithFrame:CGRectMake(0, yOrigin, self.bounds.size.width, self.pullToRefreshViewHeight)];
         view.pullToRefreshActionHandler = actionHandler;
         view.scrollView = self;
         [self addSubview:view];
@@ -114,6 +120,20 @@ static char UIScrollViewPullToRefreshView;
     return objc_getAssociatedObject(self, &UIScrollViewPullToRefreshView);
 }
 
+
+-(float)pullToRefreshViewHeight
+{
+    return [objc_getAssociatedObject(self, &UIScrollViewPullToRefreshViewHeight) floatValue];
+}
+
+-(void)setPullToRefreshViewHeight:(float)height
+{
+    [self willChangeValueForKey:@"pullToRefreshViewHeight"];
+    objc_setAssociatedObject(self, &UIScrollViewPullToRefreshViewHeight,
+                             @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self willChangeValueForKey:@"pullToRefreshViewHeight"];
+}
+
 - (void)setShowsPullToRefresh:(BOOL)showsPullToRefresh {
     self.pullToRefreshView.hidden = !showsPullToRefresh;
     
@@ -135,14 +155,14 @@ static char UIScrollViewPullToRefreshView;
             CGFloat yOrigin;
             switch (self.pullToRefreshView.position) {
                 case SVPullToRefreshPositionTop:
-                    yOrigin = -SVPullToRefreshViewHeight;
+                    yOrigin = -self.pullToRefreshViewHeight;
                     break;
                 case SVPullToRefreshPositionBottom:
                     yOrigin = self.contentSize.height;
                     break;
             }
             
-            self.pullToRefreshView.frame = CGRectMake(0, yOrigin, self.bounds.size.width, SVPullToRefreshViewHeight);
+            self.pullToRefreshView.frame = CGRectMake(0, yOrigin, self.bounds.size.width, self.pullToRefreshViewHeight);
         }
     }
 }
@@ -368,13 +388,13 @@ static char UIScrollViewPullToRefreshView;
         CGFloat yOrigin;
         switch (self.position) {
             case SVPullToRefreshPositionTop:
-                yOrigin = -SVPullToRefreshViewHeight;
+                yOrigin = -self.scrollView.pullToRefreshViewHeight;
                 break;
             case SVPullToRefreshPositionBottom:
                 yOrigin = MAX(self.scrollView.contentSize.height, self.scrollView.bounds.size.height);
                 break;
         }
-        self.frame = CGRectMake(0, yOrigin, self.bounds.size.width, SVPullToRefreshViewHeight);
+        self.frame = CGRectMake(0, yOrigin, self.bounds.size.width, self.scrollView.pullToRefreshViewHeight);
     }
     else if([keyPath isEqualToString:@"frame"])
         [self layoutSubviews];

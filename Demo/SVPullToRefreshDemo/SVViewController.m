@@ -25,6 +25,7 @@
     __weak SVViewController *weakSelf = self;
     
     // setup pull-to-refresh
+    self.tableView.pullToRefreshViewHeight = 100;
     [self.tableView addPullToRefreshWithActionHandler:^{
         [weakSelf insertRowAtTop];
     }];
