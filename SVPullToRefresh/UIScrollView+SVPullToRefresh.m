@@ -135,11 +135,17 @@ static char UIScrollViewPullToRefreshViewHeight;
 }
 
 - (void)setShowsPullToRefresh:(BOOL)showsPullToRefresh {
+    if (self.pullToRefreshView == nil)
+    {
+        return;
+    }
+
     self.pullToRefreshView.hidden = !showsPullToRefresh;
-    
+
     if(!showsPullToRefresh) {
         if (self.pullToRefreshView.isObserving) {
             [self removeObserver:self.pullToRefreshView forKeyPath:@"contentOffset"];
+            [self removeObserver:self.pullToRefreshView forKeyPath:@"contentSize"];
             [self removeObserver:self.pullToRefreshView forKeyPath:@"frame"];
             [self.pullToRefreshView resetScrollViewContentInset];
             self.pullToRefreshView.isObserving = NO;
@@ -168,7 +174,7 @@ static char UIScrollViewPullToRefreshViewHeight;
 }
 
 - (BOOL)showsPullToRefresh {
-    return !self.pullToRefreshView.hidden;
+    return self.pullToRefreshView != nil && !self.pullToRefreshView.hidden;
 }
 
 @end

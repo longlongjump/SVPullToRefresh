@@ -83,6 +83,11 @@ UIEdgeInsets scrollViewOriginalContentInsets;
 }
 
 - (void)setShowsInfiniteScrolling:(BOOL)showsInfiniteScrolling {
+    if (self.infiniteScrollingView == nil)
+    {
+        return;
+    }
+
     self.infiniteScrollingView.hidden = !showsInfiniteScrolling;
     
     if(!showsInfiniteScrolling) {
@@ -107,7 +112,7 @@ UIEdgeInsets scrollViewOriginalContentInsets;
 }
 
 - (BOOL)showsInfiniteScrolling {
-    return !self.infiniteScrollingView.hidden;
+    return self.infiniteScrollingView != nil && !self.infiniteScrollingView.hidden;
 }
 
 @end
