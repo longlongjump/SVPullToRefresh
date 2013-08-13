@@ -112,7 +112,7 @@ static char UIScrollViewPullToRefreshViewHeight;
     [self willChangeValueForKey:@"SVPullToRefreshView"];
     objc_setAssociatedObject(self, &UIScrollViewPullToRefreshView,
                              pullToRefreshView,
-                             OBJC_ASSOCIATION_ASSIGN);
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self didChangeValueForKey:@"SVPullToRefreshView"];
 }
 

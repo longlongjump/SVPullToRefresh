@@ -74,7 +74,7 @@ UIEdgeInsets scrollViewOriginalContentInsets;
     [self willChangeValueForKey:@"UIScrollViewInfiniteScrollingView"];
     objc_setAssociatedObject(self, &UIScrollViewInfiniteScrollingView,
                              infiniteScrollingView,
-                             OBJC_ASSOCIATION_ASSIGN);
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self didChangeValueForKey:@"UIScrollViewInfiniteScrollingView"];
 }
 
